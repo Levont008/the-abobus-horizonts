@@ -40,6 +40,8 @@
   - type: GuideHelp
     guides:
     - OH14_GuideResources
+  - type: Durability
+    maxDurability: 10
 
 - type: entity
   parent: OH14_MiningDrill

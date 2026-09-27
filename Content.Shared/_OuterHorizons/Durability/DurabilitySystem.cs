@@ -3,7 +3,7 @@ using Content.Shared.PowerCell;
 
 namespace Content.Shared._OuterHorizons.Durability;
 
-public abstract partial class DurabilitySystem : EntitySystem
+public sealed class DurabilitySystem : EntitySystem
 {
     [Dependency] private readonly PowerCellSystem _powerCell = default!;
 
@@ -15,13 +15,16 @@ public abstract partial class DurabilitySystem : EntitySystem
 
     private void OnMeleeHit(Entity<DurabilityComponent> ent, ref MeleeHitEvent args)
     {
+        if (args.HitEntities.Count == 0)
+            return;
+
         if (ent.Comp.UseEnergy)
             _powerCell.TryUseCharge(ent.Owner, ent.Comp.ChargePerUse);
         else
         {
-            ent.Comp.Damage--;
-            if (ent.Comp.Damage <= 0)
-                PredictedQueueDel(ent.Owner); //потом добавить звук ломания
+            ent.Comp.Damage++;
+            if (ent.Comp.Damage >= ent.Comp.MaxDurability)
+                QueueDel(ent.Owner); //потом добавить звук ломания
         }
     }
 
