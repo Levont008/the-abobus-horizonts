@@ -1,5 +1,6 @@
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.PowerCell;
+using Content.Shared.Tools.Components;
 
 namespace Content.Shared._OuterHorizons.Durability;
 
@@ -11,6 +12,7 @@ public sealed class DurabilitySystem : EntitySystem
     {
         SubscribeLocalEvent<DurabilityComponent, MeleeHitEvent>(OnMeleeHit);
         SubscribeLocalEvent<DurabilityComponent, AttemptMeleeEvent>(OnMeleeAttempt);
+        SubscribeLocalEvent<DurabilityComponent, ToolUseAttemptEvent>(OnToolAttempt);
     }
 
     private void OnMeleeHit(Entity<DurabilityComponent> ent, ref MeleeHitEvent args)
@@ -18,19 +20,33 @@ public sealed class DurabilitySystem : EntitySystem
         if (args.HitEntities.Count == 0)
             return;
 
-        if (ent.Comp.UseEnergy)
-            _powerCell.TryUseCharge(ent.Owner, ent.Comp.ChargePerUse);
-        else
-        {
-            ent.Comp.Damage++;
-            if (ent.Comp.Damage >= ent.Comp.MaxDurability)
-                QueueDel(ent.Owner); //потом добавить звук ломания
-        }
+        DurabilityUse(ent.Owner, ent.Comp);
     }
 
     private void OnMeleeAttempt(Entity<DurabilityComponent> ent, ref AttemptMeleeEvent args)
     {
         if (ent.Comp.UseEnergy && !_powerCell.HasCharge(ent.Owner, ent.Comp.ChargePerUse, user: args.User))
             args.Cancelled = true;
+    }
+
+    private void OnToolAttempt(Entity<DurabilityComponent> ent, ref ToolUseAttemptEvent args)
+    {
+        if (ent.Comp.UseEnergy && !_powerCell.HasCharge(ent.Owner, ent.Comp.ChargePerUse, user: args.User))
+            args.Cancel();
+    }
+
+    public void DurabilityUse(EntityUid uid, DurabilityComponent? component = null)
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        if (component.UseEnergy)
+            _powerCell.TryUseCharge(uid, component.ChargePerUse);
+        else
+        {
+            component.Damage++;
+            if (component.Damage >= component.MaxDurability)
+                QueueDel(uid); //потом добавить звук ломания
+        }
     }
 }
