@@ -40,8 +40,18 @@
   - type: GuideHelp
     guides:
     - OH14_GuideResources
+  - type: ContainerContainer
+    containers:
+      cell_slot: !type:ContainerSlot {}
+  - type: PowerCellSlot
+    cellSlotId: cell_slot
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
   - type: Durability
-    maxDurability: 10
+    useEnergy: true
+    chargePerUse: 8
 
 - type: entity
   parent: OH14_MiningDrill
@@ -68,6 +78,9 @@
         Brute: 10
       types:
         Structural: 30
+  - type: Durability
+    useEnergy: true
+    chargePerUse: 12
 
 - type: entity
   parent: OH14_MiningDrill
@@ -94,6 +107,9 @@
         Brute: 10
       types:
         Structural: 40
+  - type: Durability
+    useEnergy: true
+    chargePerUse: 16
 
 # Их наконечники
 
