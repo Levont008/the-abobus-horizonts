@@ -36,7 +36,7 @@ public abstract partial class SharedToolSystem : EntitySystem
     [Dependency] private   readonly TileSystem _tiles = default!;
     [Dependency] private   readonly TurfSystem _turfs = default!;
 
-    [Dependency] private   readonly DurabilitySystem _durability = default!; //Outer Horizonts change
+    [Dependency] protected   readonly SharedDurabilitySystem _durability = default!; //Outer Horizonts change
 
     public const string CutQuality = "Cutting";
     public const string PulseQuality = "Pulsing";

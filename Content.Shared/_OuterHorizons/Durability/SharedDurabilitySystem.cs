@@ -4,7 +4,7 @@ using Content.Shared.Tools.Components;
 
 namespace Content.Shared._OuterHorizons.Durability;
 
-public sealed class DurabilitySystem : EntitySystem
+public abstract partial class SharedDurabilitySystem : EntitySystem
 {
     [Dependency] private readonly PowerCellSystem _powerCell = default!;
 
@@ -14,7 +14,6 @@ public sealed class DurabilitySystem : EntitySystem
         SubscribeLocalEvent<DurabilityComponent, AttemptMeleeEvent>(OnMeleeAttempt);
         SubscribeLocalEvent<DurabilityComponent, ToolUseAttemptEvent>(OnToolAttempt);
     }
-
     private void OnMeleeHit(Entity<DurabilityComponent> ent, ref MeleeHitEvent args)
     {
         if (args.HitEntities.Count == 0)
