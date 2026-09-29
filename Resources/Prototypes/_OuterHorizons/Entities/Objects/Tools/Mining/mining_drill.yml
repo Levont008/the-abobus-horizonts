@@ -51,7 +51,7 @@
         name: power-cell-slot-component-slot-name-default
   - type: Durability
     useEnergy: true
-    chargePerUse: 8
+    chargePerUse: 4
 
 - type: entity
   parent: OH14_MiningDrill
@@ -80,7 +80,7 @@
         Structural: 30
   - type: Durability
     useEnergy: true
-    chargePerUse: 12
+    chargePerUse: 6
 
 - type: entity
   parent: OH14_MiningDrill
@@ -109,7 +109,7 @@
         Structural: 40
   - type: Durability
     useEnergy: true
-    chargePerUse: 16
+    chargePerUse: 8
 
 # Их наконечники
 
