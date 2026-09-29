@@ -19,7 +19,7 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
         if (args.HitEntities.Count == 0)
             return;
 
-        DurabilityUse(ent.Owner, ent.Comp);
+        DurabilityUse(ent.Owner, args.User, ent.Comp);
     }
 
     private void OnMeleeAttempt(Entity<DurabilityComponent> ent, ref AttemptMeleeEvent args)
@@ -34,7 +34,7 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
             args.Cancel();
     }
 
-    public void DurabilityUse(EntityUid uid, DurabilityComponent? component = null)
+    public void DurabilityUse(EntityUid uid, EntityUid user, DurabilityComponent? component = null)
     {
         if (!Resolve(uid, ref component))
             return;
@@ -45,11 +45,11 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
         {
             component.Damage++;
             if (component.Damage >= component.MaxDurability)
-                Break(uid); //потом добавить звук ломания
+                Break(uid, user, component);
         }
     }
 
-    protected virtual void Break(EntityUid uid)
+    protected virtual void Break(EntityUid uid, EntityUid user, DurabilityComponent component)
     {
         //На серверной части
     }

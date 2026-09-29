@@ -58,7 +58,7 @@ public abstract partial class SharedToolSystem : EntitySystem
         var ev = args.WrappedEvent;
         ev.DoAfter = args.DoAfter;
 
-        _durability.DurabilityUse(uid); //Outer Horizonts change
+        _durability.DurabilityUse(uid, args.User); //Outer Horizonts change
 
         if (args.OriginalTarget != null)
             RaiseLocalEvent(GetEntity(args.OriginalTarget.Value), (object) ev);
