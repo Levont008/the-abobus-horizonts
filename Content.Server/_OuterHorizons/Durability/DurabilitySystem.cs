@@ -9,6 +9,7 @@ public sealed class DurabilitySystem : SharedDurabilitySystem
     public override void Initialize()
     {
         base.Initialize();
+
         SubscribeLocalEvent<DurabilityComponent, ExaminedEvent>(OnExamine);
     }
 
@@ -27,5 +28,12 @@ public sealed class DurabilitySystem : SharedDurabilitySystem
         message.AddMarkupPermissive(Loc.GetString("durability-component-damage-message", ("state", state)));
 
         args.PushMessage(message);
+    }
+
+    protected override void Break(EntityUid uid)
+    {
+        base.Break(uid);
+
+        QueueDel(uid);
     }
 }

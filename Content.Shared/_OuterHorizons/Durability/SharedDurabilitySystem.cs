@@ -45,7 +45,12 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
         {
             component.Damage++;
             if (component.Damage >= component.MaxDurability)
-                QueueDel(uid); //потом добавить звук ломания
+                Break(uid); //потом добавить звук ломания
         }
+    }
+
+    protected virtual void Break(EntityUid uid)
+    {
+        //На серверной части
     }
 }
