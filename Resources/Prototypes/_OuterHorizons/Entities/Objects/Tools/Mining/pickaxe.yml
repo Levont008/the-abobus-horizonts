@@ -49,7 +49,7 @@
     guides:
     - OH14_GuideResources
   - type: Durability
-    maxDurability: 55
+    maxDurability: 64
 
 - type: entity
   name: улучшенная кирка
@@ -69,7 +69,7 @@
     graph: OH14_PickaxeTipT2
     node: OH14_PickaxeT2
   - type: Durability
-    maxDurability: 85
+    maxDurability: 128
 
 - type: entity
   name: продвинутая кирка
@@ -89,7 +89,7 @@
     graph: OH14_PickaxeTipT3
     node: OH14_PickaxeT3
   - type: Durability
-    maxDurability: 125
+    maxDurability: 256
 
 # Их наконечники
 
