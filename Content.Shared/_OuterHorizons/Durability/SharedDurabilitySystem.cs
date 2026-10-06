@@ -1,12 +1,15 @@
 using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.PowerCell;
 using Content.Shared.Tools.Components;
+using Content.Shared.Power.EntitySystems;
+using Content.Shared.Power.Components;
 
 namespace Content.Shared._OuterHorizons.Durability;
 
 public abstract partial class SharedDurabilitySystem : EntitySystem
 {
     [Dependency] private readonly PowerCellSystem _powerCell = default!;
+    [Dependency] private readonly SharedBatterySystem _battery = default!;
 
     public override void Initialize()
     {
@@ -24,13 +27,13 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
 
     private void OnMeleeAttempt(Entity<DurabilityComponent> ent, ref AttemptMeleeEvent args)
     {
-        if (ent.Comp.UseEnergy && !_powerCell.HasCharge(ent.Owner, ent.Comp.ChargePerUse, user: args.User))
+        if (!CanUseItem(ent.Owner, args.User, ent.Comp))
             args.Cancelled = true;
     }
 
     private void OnToolAttempt(Entity<DurabilityComponent> ent, ref ToolUseAttemptEvent args)
     {
-        if (ent.Comp.UseEnergy && !_powerCell.HasCharge(ent.Owner, ent.Comp.ChargePerUse, user: args.User))
+        if (!CanUseItem(ent.Owner, args.User, ent.Comp))
             args.Cancel();
     }
 
@@ -40,8 +43,12 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
             return;
 
         if (component.UseEnergy)
-            _powerCell.TryUseCharge(uid, component.ChargePerUse);
-        else
+        {
+            if (!_powerCell.TryGetBatteryFromSlot(uid, out var battery))
+                return;
+
+            _battery.UseCharge(battery.Value.AsNullable(), component.ChargePerUse);
+        } else
         {
             component.Damage++;
             if (component.Damage >= component.MaxDurability)
@@ -52,5 +59,18 @@ public abstract partial class SharedDurabilitySystem : EntitySystem
     protected virtual void Break(EntityUid uid, EntityUid user, DurabilityComponent component)
     {
         //На серверной части
+    }
+
+    public bool CanUseItem(EntityUid uid, EntityUid user, DurabilityComponent component)
+    {
+        if (!component.UseEnergy)
+            return true;
+
+        if (!_powerCell.HasCharge(uid, 1))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
